@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>ITsooda</title>
+  
+  <subtitle>IT에 관한 모든 이야기</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://itsooda.github.io/"/>
+  <updated>2018-03-28T13:48:33.000Z</updated>
+  <id>http://itsooda.github.io/</id>
+  
+  <author>
+    <name>Team ITsooda</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello Itsooda</title>
+    <link href="http://itsooda.github.io/2018/03/28/hello-itsooda/"/>
+    <id>http://itsooda.github.io/2018/03/28/hello-itsooda/</id>
+    <published>2018-03-28T13:48:33.000Z</published>
+    <updated>2018-03-28T13:48:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h3><p>Hexo : Jekyll 과 같은 블로그 generator</p><p>우리 블로그를 호스팅하는 실제 repository : <a href="https://ITsooda/itsooda.github.io" target="_blank" rel="noopener">https://ITsooda/itsooda.github.io</a></p><p>우리가 블로그를 개발할 repository : <a href="https://ITsooda/dev.itsooda.github.io" target="_blank" rel="noopener">https://ITsooda/dev.itsooda.github.io</a></p><p><a href="https://hexo.io/ko/docs/" target="_blank" rel="noopener">Hexo Docs</a></p><h3 id="hexo-동작원리-node-npm을-전제"><a href="#hexo-동작원리-node-npm을-전제" class="headerlink" title="hexo 동작원리 (node/npm을 전제)"></a>hexo 동작원리 (node/npm을 전제)</h3><ol><li><p>npm 을 통해 hexo를 글로벌 설치한다.</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure></li><li><p>로컬에 hexo 프로젝트를 생성한다. (이걸 한게 <a href="https://ITsooda/dev.itsooda.github.io" target="_blank" rel="noopener">https://ITsooda/dev.itsooda.github.io</a>)</p></li><li><p>해당 디렉토리에서 npm install 을 해준다. (노드 모듈 설치)</p></li><li><p>post를 작성한다</p><ul><li>현재는 souce/_post 디렉토리 내에 md 로 저장</li><li>cli에서 ‘hexo new post 제목’ 과 같은 식으로 포스트를 만들 수 있다.</li></ul></li><li><p>npm 을 통해 hexo-deployer-git을 해당 경로에  설치해준다</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></li><li><p>아래와 같이 generate(일종의 컴파일이라고 생각하면 쉬움) =&gt; deploy (github레포에 push, submit이라고 생각하자) 한다.</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br><span class="line"><span class="meta">#</span># hexo g -d 혹은 hexo deploy --generate 와 같이 쓸수도 있다.</span><br></pre></td></tr></table></figure></li><li><p>자! 그럼 이제 해당 디렉토리에 .deploy_git 이란 경로가 만들어지고 itsooda.github.io repository엔 해당 경로의 파일들이 업로드 된다.<br>이제 <a href="https://itsooda.github.io">https://itsooda.github.io</a> 로 접속해보자!</p></li><li><p>그런데 우리는 <strong>팀블로그</strong>를 운영해야한다. 우리 로컬에 있는 hexo 프로젝트를 다른 사람들에게도 전달해야겠쥬? 그렇다면 이제 hexo 프로젝트의 루트 디렉토리에서 <a href="https://ITsooda/dev.itsooda.github.io" target="_blank" rel="noopener">dev repository</a>로 add =&gt; commit =&gt; push !</p></li></ol><h3 id="To-Do"><a href="#To-Do" class="headerlink" title="To Do"></a>To Do</h3><ul><li>지금은 dev 레포안에 있는 모든 asset 과 컨텐츠를 공유하지만 (물론 최소한의 .gitignore를 했음) 차후에는 post 만 git 을 통해 함께 push 해야할듯</li><li>테마가 너무 많다! 그런데 참 아쉽게도 hexo가 중국/대만권에서 워낙 대세라서 중국어 자료가 많다… 아무튼! 다들 원하는 테마가 있다면 말해줬으면 좋겠습니다~!<br><a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo 테마 사이트</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;개요&quot;&gt;&lt;a href=&quot;#개요&quot; class=&quot;headerlink&quot; title=&quot;개요&quot;&gt;&lt;/a&gt;개요&lt;/h3&gt;&lt;p&gt;Hexo : Jekyll 과 같은 블로그 generator&lt;/p&gt;
+&lt;p&gt;우리 블로그를 호스팅하는 실제 repository : 
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
