@@ -1,26 +1,27 @@
 
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
     
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="ITsooda">
-    <title>Archives: 2018/3 - ITsooda</title>
+    <title>all-categories - ITsooda</title>
     <meta name="author" content="Team ITsooda">
     
     
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"http://itsooda.github.io","author":{"@type":"Person","name":"Team ITsooda","sameAs":[]},"name":"ITsooda","description":null,"url":"http://itsooda.github.io"}</script>
     <meta property="og:type" content="blog">
-<meta property="og:title" content="ITsooda">
-<meta property="og:url" content="http://itsooda.github.io/archives/2018/03/index.html">
+<meta property="og:title" content="all-categories">
+<meta property="og:url" content="http://itsooda.github.io/all-categories/index.html">
 <meta property="og:site_name" content="ITsooda">
-<meta property="og:locale" content="ko">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-04-21T15:41:52.329Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ITsooda">
+<meta name="twitter:title" content="all-categories">
     
     
         
@@ -136,6 +137,19 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
+                             href="/authors"
+                            
+                            title="Authors"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-user-circle" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Authors</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
                              href="#about"
                             
                             title="About"
@@ -178,94 +192,31 @@
                         hasCoverMetaIn
                         ">
                 
-    <section class="postShorten-group main-content-wrap">
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
+<div id="categories-archives" class="main-content-wrap">
+    <form id="filter-form" action="##">
+        <input name="category" type="text" class="form-control input--xlarge"
+               placeholder="Search category" autofocus="autofocus">
+    </form>
+    <h5 class="archive-result text-color-base text-xlarge"
+        data-message-zero="no category found"
+        data-message-one="1 cartegory found"
+        data-message-other="{n} categories found"></h5>
+
+        <section class="boxes">
+        
             
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2018/03/28/hello-itsooda/">
-                            Hello Itsooda
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-03-28T22:48:33+09:00">
-	
-		    3월 28, 2018
-    	
-    </time>
-    
+                <div><a href="#posts-list-Team ITsooda" class="category-anchor" data-category="team itsooda" data-parent-categories="">Team ITsooda</a></div>
+            
+        
+    </section>
+    <section class="boxes">
+        
+            
+                    <div id="posts-list-Team ITsooda" class="archive box" data-category="team itsooda" data-parent-categories=""><h4 class="archive-title text-xlarge"><a class="link-unstyled" href="/categories/Team-ITsooda/">Team ITsooda (1)</a></h4><ul class="archive-posts"><li class="archive-post"><a class="archive-post-title" href="/2018/04/03/Team ITsooda/2018-04-03-prologue/">프롤로그 : 잇수다 탄생 비화</a><span class="archive-post-date"> - Apr 03, 2018</span></li></ul></div>
+            
+        
+    </section>
 </div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h3 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h3><p>Hexo : Jekyll 과 같은 블로그 generator</p>
-<p>우리 블로그를 호스팅하는 실제 repository : <a href="https://ITsooda/itsooda.github.io" target="_blank" rel="noopener">https://ITsooda/itsooda.github.io</a></p>
-<p>우리가 블로그를 개발할 repository : <a href="https://ITsooda/dev.itsooda.github.io" target="_blank" rel="noopener">https://ITsooda/dev.itsooda.github.io</a></p>
-<p><a href="https://hexo.io/ko/docs/" target="_blank" rel="noopener">Hexo Docs</a></p>
-<h3 id="hexo-동작원리-node-npm을-전제"><a href="#hexo-동작원리-node-npm을-전제" class="headerlink" title="hexo 동작원리 (node/npm을 전제)"></a>hexo 동작원리 (node/npm을 전제)</h3><ol>
-<li><p>npm 을 통해 hexo를 글로벌 설치한다.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>로컬에 hexo 프로젝트를 생성한다. (이걸 한게 <a href="https://ITsooda/dev.itsooda.github.io" target="_blank" rel="noopener">https://ITsooda/dev.itsooda.github.io</a>)</p>
-</li>
-<li><p>해당 디렉토리에서 npm install 을 해준다. (노드 모듈 설치)</p>
-</li>
-<li><p>post를 작성한다</p>
-<ul>
-<li>현재는 souce/_post 디렉토리 내에 md 로 저장</li>
-<li>cli에서 ‘hexo new post 제목’ 과 같은 식으로 포스트를 만들 수 있다.</li>
-</ul>
-</li>
-<li><p>npm 을 통해 hexo-deployer-git을 해당 경로에  설치해준다</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>아래와 같이 generate(일종의 컴파일이라고 생각하면 쉬움) =&gt; deploy (github레포에 push, submit이라고 생각하자) 한다.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br><span class="line"><span class="meta">#</span># hexo g -d 혹은 hexo deploy --generate 와 같이 쓸수도 있다.</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>자! 그럼 이제 해당 디렉토리에 .deploy_git 이란 경로가 만들어지고 itsooda.github.io repository엔 해당 경로의 파일들이 업로드 된다.<br>이제 <a href="https://itsooda.github.io">https://itsooda.github.io</a> 로 접속해보자!</p>
-</li>
-<li><p>그런데 우리는 <strong>팀블로그</strong>를 운영해야한다. 우리 로컬에 있는 hexo 프로젝트를 다른 사람들에게도 전달해야겠쥬? 그렇다면 이제 hexo 프로젝트의 루트 디렉토리에서 <a href="https://ITsooda/dev.itsooda.github.io" target="_blank" rel="noopener">dev repository</a>로 add =&gt; commit =&gt; push !</p>
-</li>
-</ol>
-<h3 id="To-Do"><a href="#To-Do" class="headerlink" title="To Do"></a>To Do</h3><ul>
-<li>지금은 dev 레포안에 있는 모든 asset 과 컨텐츠를 공유하지만 (물론 최소한의 .gitignore를 했음) 차후에는 post 만 git 을 통해 함께 push 해야할듯</li>
-<li>테마가 너무 많다! 그런데 참 아쉽게도 hexo가 중국/대만권에서 워낙 대세라서 중국어 자료가 많다… 아무튼! 다들 원하는 테마가 있다면 말해줬으면 좋겠습니다~!<br><a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo 테마 사이트</a></li>
-</ul>
-
-                    
-                        
-
-                    
-                    
-                        <p>
-                            <a href="/2018/03/28/hello-itsooda/#post-footer" class="postShorten-excerpt_link link">
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
-        
-        
-        <li class="pagination-number">page 1 of 1</li>
-    </ul>
-</div>
-
-</section>
-
-
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
