@@ -13,12 +13,12 @@
     
         <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fallingg","sameAs":["https://github.com/"]},"authorImgUrl":"http://cphoto.asiae.co.kr/listimglink/6/2017072813523484896_2.png","articleBody":"최근 ssh로 서버에 붙어 작업할 일이 많아지면서 자연스레 맥 터미널에서 ssh를 사용하는 빈도가 함께 증가하였는데, centos에 접속할 때는 별다른 에러가 발생하지 않지만, 우분투에 접속할 때는 항상 뜨는 에러가 있었다(이게 OS를 가리는 문제인지는 모르겠지만, 경험과 지식이 짧은 내 입장에선 그렇게 받아들여졌다).\n1Unable to negotiate with ***.***.***.*** port 22: no matching key exchange method found. Their offer: diffie-hellman-group1-sha1\n아무런 지식이 없는 상태에서 해석을 해보자면, 서버에서 요구하는 어떤 key exchange method들을 내 맥OS에서 지원하지 않는다는 이야기로 받아들였다. 역시나 구글링이 필요한 시점. 처음 찾았던 해결책은 ssh command에서 옵션으로 key exchange algorithm을 지정해서 접속하는 방법이었다.\n\n기존 접속 command : ssh id@***.***.***.***\n해결 접속 command : ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -caes128-cbc id@***.***.***.***\n\n매번 하다보니 너무 귀찮기도 했고, 어느 정도(?) ssh나 리눅스를 건드려보면서 직접 접속할 때 config 파일을 수정하여 저 과정을 줄일 수 있지 않을까 생각했고, 맥os상의 /etc/ssh/ssh_config 파일을 수정하여 답을 찾았다. 주석 처리가 되어 있는 Ciphers 및 MACs의 주석을 제거하고, 맨 아래 HostkeyAlgorithms과 KexAlgorithms 관련 내용을 추가해주었다.\n123456789101112131415161718192021222324252627282930313233# Host *#   ForwardAgent no#   ForwardX11 no#   PasswordAuthentication yes#   HostbasedAuthentication no#   GSSAPIAuthentication no#   GSSAPIDelegateCredentials no#   BatchMode no#   CheckHostIP yes#   AddressFamily any#   ConnectTimeout 0#   StrictHostKeyChecking ask#   IdentityFile ~/.ssh/id_rsa#   IdentityFile ~/.ssh/id_dsa#   IdentityFile ~/.ssh/id_ecdsa#   IdentityFile ~/.ssh/id_ed25519#   Port 22#   Protocol 2    Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc    MACs hmac-md5,hmac-sha1,umac-64@openssh.com#   EscapeChar ~#   Tunnel no#   TunnelDevice any:any#   PermitLocalCommand no#   VisualHostKey no#   ProxyCommand ssh -q -W %h:%p gateway.example.com#   RekeyLimit 1G 1hHost *        SendEnv LANG LC_*HostkeyAlgorithms ssh-dss,ssh-rsaKexAlgorithms +diffie-hellman-group1-sha1\n뭔지 제대로 모르고 config 파일을 건드는 건 상당히 위험한 듯 하지만, 당장 눈 앞의 문제를 해결하는 것이 우선인 우리네 세상에 그런 거 기다릴 시간이 어디 있는가. 공부할 내용이 하나 늘었다.\n끝.\n","dateCreated":"2018-04-15T00:00:00+09:00","dateModified":"2018-04-22T19:30:59+09:00","datePublished":"2018-04-15T00:00:00+09:00","description":"","headline":"맥os에서 ssh 접속시 등장하는 에러 해결","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/"},"publisher":{"@type":"Organization","name":"fallingg","sameAs":["https://github.com/"]},"url":"http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/","keywords":"fallingg, ssh, macos, env"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fallingg","sameAs":["https://github.com/"]},"authorImgUrl":"http://cphoto.asiae.co.kr/listimglink/6/2017072813523484896_2.png","articleBody":"최근 ssh로 서버에 붙어 작업할 일이 많아지면서 자연스레 맥 터미널에서 ssh를 사용하는 빈도가 함께 증가하였는데, centos에 접속할 때는 별다른 에러가 발생하지 않지만, 우분투에 접속할 때는 항상 뜨는 에러가 있었다(이게 OS를 가리는 문제인지는 모르겠지만, 경험과 지식이 짧은 내 입장에선 그렇게 받아들여졌다).\n1Unable to negotiate with ***.***.***.*** port 22: no matching key exchange method found. Their offer: diffie-hellman-group1-sha1\n아무런 지식이 없는 상태에서 해석을 해보자면, 서버에서 요구하는 어떤 key exchange method들을 내 맥OS에서 지원하지 않는다는 이야기로 받아들였다. 역시나 구글링이 필요한 시점. 처음 찾았던 해결책은 ssh command에서 옵션으로 key exchange algorithm을 지정해서 접속하는 방법이었다.\n\n기존 접속 command : ssh id@***.***.***.***\n해결 접속 command : ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -caes128-cbc id@***.***.***.***\n\n매번 하다보니 너무 귀찮기도 했고, 어느 정도(?) ssh나 리눅스를 건드려보면서 직접 접속할 때 config 파일을 수정하여 저 과정을 줄일 수 있지 않을까 생각했고, 맥os상의 /etc/ssh/ssh_config 파일을 수정하여 답을 찾았다. 주석 처리가 되어 있는 Ciphers 및 MACs의 주석을 제거하고, 맨 아래 HostkeyAlgorithms과 KexAlgorithms 관련 내용을 추가해주었다.\n123456789101112131415161718192021222324252627282930313233# Host *#   ForwardAgent no#   ForwardX11 no#   PasswordAuthentication yes#   HostbasedAuthentication no#   GSSAPIAuthentication no#   GSSAPIDelegateCredentials no#   BatchMode no#   CheckHostIP yes#   AddressFamily any#   ConnectTimeout 0#   StrictHostKeyChecking ask#   IdentityFile ~/.ssh/id_rsa#   IdentityFile ~/.ssh/id_dsa#   IdentityFile ~/.ssh/id_ecdsa#   IdentityFile ~/.ssh/id_ed25519#   Port 22#   Protocol 2    Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc    MACs hmac-md5,hmac-sha1,umac-64@openssh.com#   EscapeChar ~#   Tunnel no#   TunnelDevice any:any#   PermitLocalCommand no#   VisualHostKey no#   ProxyCommand ssh -q -W %h:%p gateway.example.com#   RekeyLimit 1G 1hHost *        SendEnv LANG LC_*HostkeyAlgorithms ssh-dss,ssh-rsaKexAlgorithms +diffie-hellman-group1-sha1\n뭔지 제대로 모르고 config 파일을 건드는 건 상당히 위험한 듯 하지만, 당장 눈 앞의 문제를 해결하는 것이 우선인 우리네 세상에 그런 거 기다릴 시간이 어디 있는가. 공부할 내용이 하나 늘었다.\n끝.\n","dateCreated":"2018-04-15T00:00:00+09:00","dateModified":"2018-04-22T19:30:59+09:00","datePublished":"2018-04-15T00:00:00+09:00","description":"","headline":"맥os에서 ssh 접속시 등장하는 에러 해결","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/"},"publisher":{"@type":"Organization","name":"fallingg","sameAs":["https://github.com/"]},"url":"http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/","keywords":"fallingg, ssh, macos, env"}</script>
     <meta name="description" content="최근 ssh로 서버에 붙어 작업할 일이 많아지면서 자연스레 맥 터미널에서 ssh를 사용하는 빈도가 함께 증가하였는데, centos에 접속할 때는 별다른 에러가 발생하지 않지만, 우분투에 접속할 때는 항상 뜨는 에러가 있었다(이게 OS를 가리는 문제인지는 모르겠지만, 경험과 지식이 짧은 내 입장에선 그렇게 받아들여졌다). 1Unable to negotiate">
 <meta name="keywords" content="fallingg,ssh,macos,env">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="맥os에서 ssh 접속시 등장하는 에러 해결">
-<meta property="og:url" content="http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/index.html">
+<meta property="og:url" content="http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/index.html">
 <meta property="og:site_name" content="ITsooda">
 <meta property="og:description" content="최근 ssh로 서버에 붙어 작업할 일이 많아지면서 자연스레 맥 터미널에서 ssh를 사용하는 빈도가 함께 증가하였는데, centos에 접속할 때는 별다른 에러가 발생하지 않지만, 우분투에 접속할 때는 항상 뜨는 에러가 있었다(이게 OS를 가리는 문제인지는 모르겠지만, 경험과 지식이 짧은 내 입장에선 그렇게 받아들여졌다). 1Unable to negotiate">
 <meta property="og:locale" content="en">
@@ -35,7 +35,7 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-1udptkpril81ozu8ifd8zpujn7ipu7lefxsiu5gxx0dpnzntdx6dusvki3ao.min.css">
+    <link rel="stylesheet" href="/assets/css/style-gk2hzqugbwsd5ogrvwd2rybgihcww9wjzjtpdkkrbwlwcwqtn5ihwk5iy7aj.min.css">
     <!--STYLES END-->
     
 
@@ -262,7 +262,8 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" data-tooltip="라즈베리파이 카메라 연결하기" aria-label="PREVIOUS: 라즈베리파이 카메라 연결하기">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -289,7 +290,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Facebook">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Facebook">
                     <i class="fa fa-facebook-official" aria-hidden="true"></i>
                 </a>
             </li>
@@ -297,7 +298,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Twitter">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Twitter">
                     <i class="fa fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -305,7 +306,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Google+">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Google+">
                     <i class="fa fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -357,7 +358,8 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled">
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" data-tooltip="라즈베리파이 카메라 연결하기" aria-label="PREVIOUS: 라즈베리파이 카메라 연결하기">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -384,7 +386,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Facebook">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Facebook">
                     <i class="fa fa-facebook-official" aria-hidden="true"></i>
                 </a>
             </li>
@@ -392,7 +394,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Twitter">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Twitter">
                     <i class="fa fa-twitter" aria-hidden="true"></i>
                 </a>
             </li>
@@ -400,7 +402,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Google+">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" title="Share on Google+">
                     <i class="fa fa-google-plus" aria-hidden="true"></i>
                 </a>
             </li>
@@ -433,7 +435,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
+                <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
                     <i class="fa fa-facebook-official" aria-hidden="true"></i><span>Share on Facebook</span>
                 </a>
             </li>
@@ -441,7 +443,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
+                <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
                     <i class="fa fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                 </a>
             </li>
@@ -449,7 +451,7 @@
             
             
             <li class="share-option">
-                <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
+                <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
                     <i class="fa fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                 </a>
             </li>
@@ -489,13 +491,13 @@
         
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
-<script src="/assets/js/script-yhuo2grt8r7qkqumzgjoglkfbicl1thukjgmla6jopu56zpcowfedi5zjcor.min.js"></script>
+<script src="/assets/js/script-deiwtxsjnp50lxiqhwbo3gog5clvd6bzghfoatlrixfm79ncs5qg7uvimszf.min.js"></script>
 <!--SCRIPTS END-->
 
     
         <script>
              var disqus_config = function () {
-                 this.page.url = 'http://itsooda.github.io/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/';
+                 this.page.url = 'http://itsooda.com/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/';
                  
                     this.page.identifier = '2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/';
                  

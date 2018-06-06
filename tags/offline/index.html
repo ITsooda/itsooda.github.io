@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="ITsooda">
-    <title>Tag: macos - ITsooda</title>
+    <title>Tag: offline - ITsooda</title>
     <meta name="author" content="Team ITsooda">
     
     
@@ -16,7 +16,7 @@
     <script type="application/ld+json">{}</script>
     <meta property="og:type" content="blog">
 <meta property="og:title" content="ITsooda">
-<meta property="og:url" content="http://itsooda.com/tags/macos/index.html">
+<meta property="og:url" content="http://itsooda.com/tags/offline/index.html">
 <meta property="og:site_name" content="ITsooda">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
@@ -200,21 +200,21 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
-                        <a class="link-unstyled" href="/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/">
-                            맥os에서 ssh 접속시 등장하는 에러 해결
+                        <a class="link-unstyled" href="/2018/04/23/Team ITsooda/2018-04-22-offline/">
+                            20180422 offline 사진일기
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2018-04-15T00:00:00+09:00">
+    <time datetime="2018-04-23T00:00:00+09:00">
 	
-		    Apr 15, 2018
+		    Apr 23, 2018
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/env/">env</a>
+    <a class="category-link" href="/categories/Team-ITsooda/">Team ITsooda</a>
 
 
         
@@ -226,17 +226,20 @@
             </div>
             
                 <div class="postShorten-content">
-                    <p>최근 ssh로 서버에 붙어 작업할 일이 많아지면서 자연스레 맥 터미널에서 ssh를 사용하는 빈도가 함께 증가하였는데, centos에 접속할 때는 별다른 에러가 발생하지 않지만, 우분투에 접속할 때는 항상 뜨는 에러가 있었다(이게 OS를 가리는 문제인지는 모르겠지만, 경험과 지식이 짧은 내 입장에선 그렇게 받아들여졌다).</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unable to negotiate with ***.***.***.*** port 22: no matching key exchange method found. Their offer: diffie-hellman-group1-sha1</span><br></pre></td></tr></table></figure>
-<p>아무런 지식이 없는 상태에서 해석을 해보자면, 서버에서 요구하는 어떤 key exchange method들을 내 맥OS에서 지원하지 않는다는 이야기로 받아들였다. 역시나 구글링이 필요한 시점. 처음 찾았던 해결책은 ssh command에서 옵션으로 key exchange algorithm을 지정해서 접속하는 방법이었다.</p>
-<ul>
-<li>기존 접속 command : <code>ssh id@***.***.***.***</code></li>
-<li>해결 접속 command : <code>ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -caes128-cbc id@***.***.***.***</code></li>
-</ul>
-<p>매번 하다보니 너무 귀찮기도 했고, 어느 정도(?) ssh나 리눅스를 건드려보면서 직접 접속할 때 config 파일을 수정하여 저 과정을 줄일 수 있지 않을까 생각했고, 맥os상의 /etc/ssh/ssh_config 파일을 수정하여 답을 찾았다. 주석 처리가 되어 있는 Ciphers 및 MACs의 주석을 제거하고, 맨 아래 HostkeyAlgorithms과 KexAlgorithms 관련 내용을 추가해주었다.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Host *</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   ForwardAgent no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   ForwardX11 no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   PasswordAuthentication yes</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   HostbasedAuthentication no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   GSSAPIAuthentication no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   GSSAPIDelegateCredentials no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   BatchMode no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   CheckHostIP yes</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   AddressFamily any</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   ConnectTimeout 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   StrictHostKeyChecking ask</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   IdentityFile ~/.ssh/id_rsa</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   IdentityFile ~/.ssh/id_dsa</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   IdentityFile ~/.ssh/id_ecdsa</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   IdentityFile ~/.ssh/id_ed25519</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   Port 22</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   Protocol 2</span></span><br><span class="line">    Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc</span><br><span class="line">    MACs hmac-md5,hmac-sha1,umac-64@openssh.com</span><br><span class="line"><span class="meta">#</span><span class="bash">   EscapeChar ~</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   Tunnel no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   TunnelDevice any:any</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   PermitLocalCommand no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   VisualHostKey no</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   ProxyCommand ssh -q -W %h:%p gateway.example.com</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   RekeyLimit 1G 1h</span></span><br><span class="line"></span><br><span class="line">Host *</span><br><span class="line">        SendEnv LANG LC_*</span><br><span class="line"></span><br><span class="line">HostkeyAlgorithms ssh-dss,ssh-rsa</span><br><span class="line">KexAlgorithms +diffie-hellman-group1-sha1</span><br></pre></td></tr></table></figure>
-<p>뭔지 제대로 모르고 config 파일을 건드는 건 상당히 위험한 듯 하지만, 당장 눈 앞의 문제를 해결하는 것이 우선인 우리네 세상에 그런 거 기다릴 시간이 어디 있는가. 공부할 내용이 하나 늘었다.</p>
-<p>끝.</p>
+                    <p>본격적으로 함께 시작하기로 하기에 앞서, 왠지 모르게 다가오는, 온라인에서 서로 주절주절 하기만 하면 아무도 진행하지 않을 것 같다는 불길한 예감이 있었다. 그래서 2주에 한 번은 시간 되는 사람들끼리 만나기로 했고, 어제가 그 첫 날이었다. </p>
+<p><img src="/img/2018-04-22-01.jpeg" alt="2018-04-22-01"></p>
+<p>모두가 사는 곳이 비슷하지만 조금씩 달라 항상 어디서 만날 지 정하는 데 시간을 쏟곤 하는데, 항상 집과 가까워서 참석률 100%를 이어나가고 있다(개꿀). 만나서 뭐 딱히 거창한 걸 하지는 않고, 그냥 각자 일을 한다. 무언가를 할 때 아무래도 내가 주도적인 액션을 취하다보니 같이 시작하기로 한 그들은 어느 순간 나를 편집장이나 팀장, 심지어는 클라이언트 급으로 생각하고 있는 듯 했다. </p>
+<p><img src="/img/2018-04-22-02.jpeg" alt="2018-04-22-01"></p>
+<p>대략 오후 6시 30분부터 블로그 개발에 있어 발견한 이슈들을 공유(라고 쓰고 일방적으로 던진다고 읽는다)하고, 고쳐 나가고, 각자 할 일을 하고, 수다도 조금 떨고, 하다보면 어느샌가 불특정한 한 주제에 모두가 과몰입하게 된다. 이런 점이 직접 오프라인에서 만나 무언가를 하는 것의 장점인 것 같다.</p>
+<p><img src="/img/2018-04-22-03.jpeg" alt="2018-04-22-01"></p>
+<p>쓰잘 데 없이 과몰입에 빠지다 보면 밥 때도 놓치고 후회하기 마련이다. 나는 점심도 먹지 않은 상태로 나왔기에 도착해서 샌드위치를 사 먹어서 딱 좋은 타이밍에 식사하러 출발. 이 모임은 참 신기한 것이, 뭘 먹어야만 해산한다. </p>
+<p><img src="/img/2018-04-22-04.jpeg" alt="2018-04-22-01"></p>
+<p>모두가 함께 졸업한 학교 후문에 꼭 이런 느낌의 고깃집이 있었다. 거긴 삼겹살이랍시고 사실은 구이용으로 퍽퍽해서 잘 먹지 않는 전지살을 떼다가 팔았지만, 가격만큼은 매우 저렴하여 배 터지게 먹을 수 있었던 좋은 곳이었다. 대통주라는 요상한 술도 함께 먹었던 기억이 새록새록 하여 신나게 떠들며 먹었다. </p>
+<p><img src="/img/2018-04-22-05.jpeg" alt="2018-04-22-01"></p>
+<p><img src="/img/2018-04-22-06.jpeg" alt="2018-04-22-01"></p>
+<p><img src="/img/2018-04-22-07.jpeg" alt="2018-04-22-01"></p>
+<p>이 모임이 또 신기한 것이, 비슷하지만 완전히 다른(혹은 완전히 다르지만 조금은 비슷한) 일을 하는 사람들끼리 모이다보니, 동네 친구도 아니거니와 직장동료도 아니다보니 일 이야기를 하는 것이 (다른 곳에서보다는) 재밌다. 이 분들을 자주 뵙고 싶은 수많은 이유 중 하나. 그런 의미에서 자리가 파할 때 쯤 나왔던 이야기가 있었는데, 꼭 그렇게 되었으면 좋겠다. 자세한 내용은 생략.</p>
+<p>end.</p>
 
                     
                         
@@ -244,7 +247,7 @@
                     
                     
                         <p>
-                            <a href="/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/#post-footer" class="postShorten-excerpt_link link">
+                            <a href="/2018/04/23/Team ITsooda/2018-04-22-offline/#post-footer" class="postShorten-excerpt_link link">
                                 Comment and share
                             </a>
                         </p>

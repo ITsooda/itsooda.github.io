@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="ITsooda">
+    <title>라즈베리파이 카메라 연결하기 - ITsooda</title>
+    <meta name="author" content="Team ITsooda">
+    
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"수달","sameAs":["https://github.com/"]},"authorImgUrl":"http://cphoto.asiae.co.kr/listimglink/6/2017072813523484896_2.png","articleBody":"시작이 반이다.\n나는 컴퓨터속을 벗어난 적이 없는, 뭔가 현실세계에는 나가지못한 그런것을 개발한다. 그래서 뭔가 하드웨어를 만져서 현실세계의 것을 다루고 싶었다.\n일단은 조금은 편하고 익숙한 것에서 부터 출발하기로 하였다.\n‘라즈베리파이’라는 마치 장난감 같은? 아주조그마한 컴퓨터와 그것과 세트로움직이는 ‘라즈베리파이 카메라 v2’ 일단은 이거 두개로 무언가를 해보기로 하였다.\n당연히, 그 무언가는 이 카메라로 데이터를 취득하고 라즈베리파이 안에서 뭔가 데이터처리를 하는 것이다. (일단은 이것부터… 다음에는 이 데이터를 기반으로 뭔가 반응을 보이는 것을 하고자한다.) 또한, 딥러닝은 쓰지않을 생각이다. 기존의 많은 영상처리, 신호처리 방법을 적용시킬 생각이다. 당연히 이걸 잘모르니까 공부하면서 한다.\n\n\n\n환경 세팅\n큰제목이 시작이 반인 이유는 고작 라즈베리파이 카메라를 붙이고, 거기서 영상을 받는 것조차 쉽지않았기때문이다. (젠장. 역시 현실세계는)\n여기서는 3가지 세팅에 대해서 설명을 하도록 한다.\n(1) 라즈베리 파이에 원격접속하기. 매번 라즈베리파이를 쓰겟다고, hdmi뽑아서 붙이고 키보드랑 마우스를 연결하는 것보다는 원격접속하는 편이 낫다.\n(2) openCV 설치하기. 윈도우 말고 다른 우분투같은 os에서 python opencv를 설치하는 것은 정말쉬운일이 아니다.\n(3) 카메라를 라즈베리파이에 끼우고, 데이터를 받아보자.\n(기타) 사람들은 vi로 python 코드를 짜던데..이건 아닌거같다. 넘나어렵다. 편한 atom을 깔려고했는데 실패 (아놔). nano를 이용해서 코드를 짜보기로\n\n\n이게되면 정말 시작할 수 있는 위치에 선 것.\n\n(1) 원격접속하기.\n원격접속은 가장 기본이되는 ssh가 있다. 그리고 영상을 봐야하니까 화면도 받을 수 있는 VNCserver라는 방식도 있다. 뭐 그렇게 어려운방식은 아니다.일단. VNC vncserver\n라즈베리파이에 vnc 서버를 설치해서 화면으로 직접 원격접속하는 것\n설치\n\n123sudo apt-get updatesudo apt-get install tightvncserver\n\n설치가 완료되면 vncserver :1 를 terminal에 입력해서 서버를 열어준다.\n접속하고싶은 피씨에 vnc viewer를 깔고 IP주소:1 로 접속하면 끝\n\n추가\n\n설치할 때, setting에서 vncserver 접속 가능? 뭐이런거 설정해준거같은데 잘 기억이안난다. 안되면 거기들어가서 찾아보는 것을 추천.\n\n\n\nSSH 이용하기\nvnc server를 이용하는 경우 일단 라즈베리파이에 들어가서 서버를 열어주어야함. 결국 한번은 키보드꼽고, 모니터꼽고 막 그래야 한다는 것 (오쒯..)\n하지만 ssh로 터미널켜서 server를 열어준다면? (ㅋㅋ이거뭔가 지저분한 방법인데ㅋㅋ)\n\n\n우선 option을 ssh 가 가능하도록 바꿔주자\n\nsudo raspi-config 로 접속\n일반적으로 8. advanced option에 ssh가 있다고한다 (내라즈베리파이는 그게없다. 너무구버전?혹은신버전?)\n대신 4. Interfacing Options에 들어가있음\nSSH 활성화시켜줌\n\n\n\n\n\n\n원격접속\n\nssh (접속할 ID)@(IP주소)로 접속 가능\n일반적으로 라즈베리파이의 ID는 pi password는 raspberry 이다.\n\n\n\n(2) openCV 설치하기.\nOpencv 설치하기 참고사이트  혹은 참고사이트2\n\n여기서 아주기이이일게 설치를 하는 것이 나온다. 이 글에서 사용한 방법은 이게 아니지만 복잡하고 긴만큼 이렇게 까는것이 좋은거 같다. 아마도 정석인듯 밀고다시깔땐 이걸로해야지.\n둘 다 같은 사람이 쓴거같은데\n\n\n현실은 누군가가 미리 쎄팅해놓은걸 따운받음. 개꿀\n\n여기여기\n다 좋은데 이러면 가상환경에 어뜨케 opencv넣는지 모르겠음. 대체 opencv는 어디에 깔려있는걸까\n\n\n\n(3) 카메라 연결\n라즈베리파이와 라즈베리파이카메라는 csi포트라는 것을 통해서 연결이 된다.\n\n이것도 ssh와 마찬가지로 sudo raspi-config 여기로 들어가서 카메라부분을 9잘찾은 다음) enable만들어주면 라즈베리파이 카메라와 연결이 됨.\n\n\n사진 테스트\n\n일단 제대로 끼워졌나 확인을 시작해보자\n터미널로 가서 아래명령어를 치면 test_pic.jpg라는 이미지가 찍힌다.\n\n1raspistill -o test_pic.jpg\n\n이제는 Opencv로 영상을 받아보자. 그래야 python으로 뭔가 영상을 만지작만지작하지.\n\nOpencv로 영상에 접근하기위해서는 V4L2드라이버를 로드해줄 필요가 있음.\nsudo modprobe bcm2835-v4l2를 터미널에서 실행한다.\n그러면 드라이버가 로드됨\n드라이버가 로드되면 ls /dev/video*했을떄 video0가 추가되었을 것이다.\n\n\n부팅 시점에 드라이버로드 해주기.\n/etc/modules 수정해주기. nano를 쓰자.\n터미널에서 nano /etc/modules 실행\n제일 아래줄에 bcm2835-v4l2추가해주기.\n\n\n\n\n\n\n아직 잘 모르지만. 예제코드를 돌려보자.\nimport cv2\ncap = cv2.VideoCapture(0)\n\nwhile cap.isOpened():\n  ret, img = cap.read()\n  if ret:\n    cv2.imshow('test', img)\n    if cv2.waitkey(1) &amp; 0xFF == 27: # esc\n      break\n\n\n\n깔았다\n고작 영상한번 띄우자고 너무나고생했다. 하 일단은 좋은컴퓨터에서 영상로드해서 할까봐…\n다음번엔 신호처리 기법을 적용시켜본다!\n일단 1차 목표는 딥러닝을 쓰지않고, 사물이나 사람을 인식해서 그 위치를 추척하는걸 구현하는 것.\n2차목표는 지난번에 삿던 CCTV 라즈베리파이에 연결하기… 그래야 그 찾은 위치 따라다니지 히익(망한듯 CCTV망가짐)\n\n\n\n","dateCreated":"2018-04-22T00:00:00+09:00","dateModified":"2018-06-06T14:13:08+09:00","datePublished":"2018-04-22T00:00:00+09:00","description":"","headline":"라즈베리파이 카메라 연결하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/"},"publisher":{"@type":"Organization","name":"수달","sameAs":["https://github.com/"]},"url":"http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/","keywords":"raspi, cv, ml"}</script>
+    <meta name="description" content="시작이 반이다. 나는 컴퓨터속을 벗어난 적이 없는, 뭔가 현실세계에는 나가지못한 그런것을 개발한다. 그래서 뭔가 하드웨어를 만져서 현실세계의 것을 다루고 싶었다. 일단은 조금은 편하고 익숙한 것에서 부터 출발하기로 하였다. ‘라즈베리파이’라는 마치 장난감 같은? 아주조그마한 컴퓨터와 그것과 세트로움직이는 ‘라즈베리파이 카메라 v2’ 일단은 이거 두개로 무언">
+<meta name="keywords" content="raspi,cv,ml">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="라즈베리파이 카메라 연결하기">
+<meta property="og:url" content="http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/index.html">
+<meta property="og:site_name" content="ITsooda">
+<meta property="og:description" content="시작이 반이다. 나는 컴퓨터속을 벗어난 적이 없는, 뭔가 현실세계에는 나가지못한 그런것을 개발한다. 그래서 뭔가 하드웨어를 만져서 현실세계의 것을 다루고 싶었다. 일단은 조금은 편하고 익숙한 것에서 부터 출발하기로 하였다. ‘라즈베리파이’라는 마치 장난감 같은? 아주조그마한 컴퓨터와 그것과 세트로움직이는 ‘라즈베리파이 카메라 v2’ 일단은 이거 두개로 무언">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-06-06T05:13:08.148Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="라즈베리파이 카메라 연결하기">
+<meta name="twitter:description" content="시작이 반이다. 나는 컴퓨터속을 벗어난 적이 없는, 뭔가 현실세계에는 나가지못한 그런것을 개발한다. 그래서 뭔가 하드웨어를 만져서 현실세계의 것을 다루고 싶었다. 일단은 조금은 편하고 익숙한 것에서 부터 출발하기로 하였다. ‘라즈베리파이’라는 마치 장난감 같은? 아주조그마한 컴퓨터와 그것과 세트로움직이는 ‘라즈베리파이 카메라 v2’ 일단은 이거 두개로 무언">
+    
+    
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-gk2hzqugbwsd5ogrvwd2rybgihcww9wjzjtpdkkrbwlwcwqtn5ihwk5iy7aj.min.css">
+    <!--STYLES END-->
+    
+
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">ITsooda</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="Categories"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="Archives"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/authors"
+                            
+                            title="Authors"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-user-circle" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Authors</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            라즈베리파이 카메라 연결하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-04-22T00:00:00+09:00">
+	
+		    Apr 22, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Machine-Learning/">Machine Learning</a>
+
+
+        
+            <span>, by 수달<span>
+        
+    
+</div>
+
+    
+
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h1 id="시작이-반이다"><a href="#시작이-반이다" class="headerlink" title="시작이 반이다."></a>시작이 반이다.</h1><ul>
+<li>나는 컴퓨터속을 벗어난 적이 없는, 뭔가 현실세계에는 나가지못한 그런것을 개발한다. 그래서 뭔가 하드웨어를 만져서 현실세계의 것을 다루고 싶었다.</li>
+<li>일단은 조금은 편하고 익숙한 것에서 부터 출발하기로 하였다.<ul>
+<li>‘라즈베리파이’라는 마치 장난감 같은? 아주조그마한 컴퓨터와 그것과 세트로움직이는 ‘라즈베리파이 카메라 v2’ 일단은 이거 두개로 무언가를 해보기로 하였다.</li>
+<li>당연히, 그 무언가는 이 카메라로 데이터를 취득하고 라즈베리파이 안에서 뭔가 데이터처리를 하는 것이다. (일단은 이것부터… 다음에는 이 데이터를 기반으로 뭔가 반응을 보이는 것을 하고자한다.) 또한, 딥러닝은 쓰지않을 생각이다. 기존의 많은 영상처리, 신호처리 방법을 적용시킬 생각이다. 당연히 이걸 잘모르니까 공부하면서 한다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="환경-세팅"><a href="#환경-세팅" class="headerlink" title="환경 세팅"></a>환경 세팅</h2><ul>
+<li>큰제목이 시작이 반인 이유는 고작 라즈베리파이 카메라를 붙이고, 거기서 영상을 받는 것조차 쉽지않았기때문이다. (젠장. 역시 현실세계는)</li>
+<li>여기서는 3가지 세팅에 대해서 설명을 하도록 한다.<ul>
+<li>(1) 라즈베리 파이에 원격접속하기. 매번 라즈베리파이를 쓰겟다고, hdmi뽑아서 붙이고 키보드랑 마우스를 연결하는 것보다는 원격접속하는 편이 낫다.</li>
+<li>(2) openCV 설치하기. 윈도우 말고 다른 우분투같은 os에서 python opencv를 설치하는 것은 정말쉬운일이 아니다.</li>
+<li>(3) 카메라를 라즈베리파이에 끼우고, 데이터를 받아보자.</li>
+<li>(기타) 사람들은 vi로 python 코드를 짜던데..이건 아닌거같다. 넘나어렵다. 편한 atom을 깔려고했는데 실패 (아놔). nano를 이용해서 코드를 짜보기로</li>
+</ul>
+</li>
+<li>이게되면 정말 시작할 수 있는 위치에 선 것.</li>
+</ul>
+<h2 id="1-원격접속하기"><a href="#1-원격접속하기" class="headerlink" title="(1) 원격접속하기."></a>(1) 원격접속하기.</h2><ul>
+<li>원격접속은 가장 기본이되는 ssh가 있다. 그리고 영상을 봐야하니까 화면도 받을 수 있는 VNCserver라는 방식도 있다. 뭐 그렇게 어려운방식은 아니다.<h3 id="일단-VNC-vncserver"><a href="#일단-VNC-vncserver" class="headerlink" title="일단. VNC vncserver"></a>일단. VNC vncserver</h3></li>
+<li>라즈베리파이에 vnc 서버를 설치해서 화면으로 직접 원격접속하는 것</li>
+<li>설치</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line">sudo apt-get install tightvncserver</span><br></pre></td></tr></table></figure>
+<ul>
+<li>설치가 완료되면 <code>vncserver :1</code> 를 terminal에 입력해서 서버를 열어준다.</li>
+<li><p>접속하고싶은 피씨에 vnc viewer를 깔고 <code>IP주소:1</code> 로 접속하면 끝</p>
+</li>
+<li><p>추가</p>
+<ul>
+<li>설치할 때, setting에서 vncserver 접속 가능? 뭐이런거 설정해준거같은데 잘 기억이안난다. 안되면 거기들어가서 찾아보는 것을 추천.</li>
+</ul>
+</li>
+</ul>
+<h3 id="SSH-이용하기"><a href="#SSH-이용하기" class="headerlink" title="SSH 이용하기"></a>SSH 이용하기</h3><ul>
+<li>vnc server를 이용하는 경우 일단 라즈베리파이에 들어가서 서버를 열어주어야함. 결국 한번은 키보드꼽고, 모니터꼽고 막 그래야 한다는 것 (오쒯..)<ul>
+<li>하지만 ssh로 터미널켜서 server를 열어준다면? (ㅋㅋ이거뭔가 지저분한 방법인데ㅋㅋ)</li>
+</ul>
+</li>
+<li><p>우선 option을 ssh 가 가능하도록 바꿔주자</p>
+<ul>
+<li><code>sudo raspi-config</code> 로 접속<ul>
+<li>일반적으로 8. advanced option에 ssh가 있다고한다 (내라즈베리파이는 그게없다. 너무구버전?혹은신버전?)</li>
+<li>대신 4. Interfacing Options에 들어가있음<ul>
+<li>SSH 활성화시켜줌</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>원격접속</p>
+<ul>
+<li><code>ssh (접속할 ID)@(IP주소)</code>로 접속 가능</li>
+<li>일반적으로 라즈베리파이의 ID는 <code>pi</code> password는 <code>raspberry</code> 이다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-openCV-설치하기"><a href="#2-openCV-설치하기" class="headerlink" title="(2) openCV 설치하기."></a>(2) openCV 설치하기.</h2><ul>
+<li><p><a href="http://webnautes.tistory.com/916" target="_blank" rel="noopener">Opencv 설치하기 참고사이트 </a> 혹은 <a href="http://webnautes.tistory.com/1030" target="_blank" rel="noopener">참고사이트2</a></p>
+<ul>
+<li>여기서 아주기이이일게 설치를 하는 것이 나온다. 이 글에서 사용한 방법은 이게 아니지만 복잡하고 긴만큼 이렇게 까는것이 좋은거 같다. 아마도 정석인듯 밀고다시깔땐 이걸로해야지.</li>
+<li>둘 다 같은 사람이 쓴거같은데</li>
+</ul>
+</li>
+<li><p>현실은 누군가가 미리 쎄팅해놓은걸 따운받음. 개꿀</p>
+<ul>
+<li><a href="https://github.com/dltpdn/opencv-for-rpi" target="_blank" rel="noopener">여기여기</a></li>
+<li>다 좋은데 이러면 가상환경에 어뜨케 opencv넣는지 모르겠음. 대체 opencv는 어디에 깔려있는걸까</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-카메라-연결"><a href="#3-카메라-연결" class="headerlink" title="(3) 카메라 연결"></a>(3) 카메라 연결</h3><ul>
+<li><p>라즈베리파이와 라즈베리파이카메라는 csi포트라는 것을 통해서 연결이 된다.</p>
+<ul>
+<li>이것도 ssh와 마찬가지로 <code>sudo raspi-config</code> 여기로 들어가서 카메라부분을 9잘찾은 다음) <code>enable</code>만들어주면 라즈베리파이 카메라와 연결이 됨.</li>
+</ul>
+</li>
+<li><p>사진 테스트</p>
+<ul>
+<li>일단 제대로 끼워졌나 확인을 시작해보자</li>
+<li>터미널로 가서 아래명령어를 치면 <code>test_pic.jpg</code>라는 이미지가 찍힌다.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raspistill -o test_pic.jpg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>이제는 <code>Opencv</code>로 영상을 받아보자. 그래야 python으로 뭔가 영상을 만지작만지작하지.</p>
+</li>
+<li>Opencv로 영상에 접근하기위해서는 V4L2드라이버를 로드해줄 필요가 있음.<ul>
+<li><code>sudo modprobe bcm2835-v4l2</code>를 터미널에서 실행한다.</li>
+<li>그러면 드라이버가 로드됨</li>
+<li>드라이버가 로드되면 <code>ls /dev/video*</code>했을떄 video0가 추가되었을 것이다.</li>
+</ul>
+</li>
+<li>부팅 시점에 드라이버로드 해주기.<ul>
+<li><code>/etc/modules</code> 수정해주기. <code>nano</code>를 쓰자.<ul>
+<li>터미널에서 <code>nano /etc/modules</code> 실행</li>
+<li>제일 아래줄에 <code>bcm2835-v4l2</code>추가해주기.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>아직 잘 모르지만. 예제코드를 돌려보자.</p>
+<pre><code class="python"><span class="keyword">import</span> cv2
+cap = cv2.VideoCapture(<span class="number">0</span>)
+
+<span class="keyword">while</span> cap.isOpened():
+  ret, img = cap.read()
+  <span class="keyword">if</span> ret:
+    cv2.imshow(<span class="string">'test'</span>, img)
+    <span class="keyword">if</span> cv2.waitkey(<span class="number">1</span>) &amp; <span class="number">0xFF</span> == <span class="number">27</span>: <span class="comment"># esc</span>
+      <span class="keyword">break</span>
+</code></pre>
+</li>
+</ul>
+<h2 id="깔았다"><a href="#깔았다" class="headerlink" title="깔았다"></a>깔았다</h2><ul>
+<li>고작 영상한번 띄우자고 너무나고생했다. 하 일단은 좋은컴퓨터에서 영상로드해서 할까봐…<ul>
+<li>다음번엔 신호처리 기법을 적용시켜본다!</li>
+<li>일단 1차 목표는 딥러닝을 쓰지않고, 사물이나 사람을 인식해서 그 위치를 추척하는걸 구현하는 것.</li>
+<li>2차목표는 지난번에 삿던 CCTV 라즈베리파이에 연결하기… 그래야 그 찾은 위치 따라다니지 히익(망한듯 CCTV망가짐)</li>
+</ul>
+</li>
+</ul>
+
+            
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/cv/">cv</a> <a class="tag tag--primary tag--small t-link" href="/tags/ml/">ml</a> <a class="tag tag--primary tag--small t-link" href="/tags/raspi/">raspi</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/23/Team ITsooda/2018-04-22-offline/" data-tooltip="20180422 offline 사진일기" aria-label="PREVIOUS: 20180422 offline 사진일기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" data-tooltip="맥os에서 ssh 접속시 등장하는 에러 해결" aria-label="NEXT: 맥os에서 ssh 접속시 등장하는 에러 해결">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" title="Share on Facebook">
+                    <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" title="Share on Twitter">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" title="Share on Google+">
+                    <i class="fa fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2018 Team ITsooda. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/23/Team ITsooda/2018-04-22-offline/" data-tooltip="20180422 offline 사진일기" aria-label="PREVIOUS: 20180422 offline 사진일기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/04/15/env/2018-04-15-fallingg-macos-ssh-error/" data-tooltip="맥os에서 ssh 접속시 등장하는 에러 해결" aria-label="NEXT: 맥os에서 ssh 접속시 등장하는 에러 해결">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" title="Share on Facebook">
+                    <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" title="Share on Twitter">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/" title="Share on Google+">
+                    <i class="fa fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment-o"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <i id="btn-close-shareoptions" class="fa fa-close"></i>
+    <ul class="share-options">
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/">
+                    <i class="fa fa-facebook-official" aria-hidden="true"></i><span>Share on Facebook</span>
+                </a>
+            </li>
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/">
+                    <i class="fa fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                </a>
+            </li>
+        
+            
+            
+            <li class="share-option">
+                <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/">
+                    <i class="fa fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Team ITsooda</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-deiwtxsjnp50lxiqhwbo3gog5clvd6bzghfoatlrixfm79ncs5qg7uvimszf.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'http://itsooda.com/2018/04/22/Machine Learning/2018-04-22-raspi-setting/';
+                 
+                    this.page.identifier = '2018/04/22/Machine Learning/2018-04-22-raspi-setting/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'itsooda';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>
